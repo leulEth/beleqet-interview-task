@@ -9,7 +9,7 @@ import { fetchJobs, fetchCategories } from "@/lib/api";
 export default async function HomePage() {
   // Fetch jobs (featured ones will be displayed)
   const jobsData = await fetchJobs();
-  const jobs = Array.isArray(jobsData) ? jobsData : jobsData.data || [];
+  const jobs = jobsData.items || [];
 
   // Fetch categories
   const categories = await fetchCategories();

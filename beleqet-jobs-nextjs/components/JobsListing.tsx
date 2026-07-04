@@ -5,10 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { Search, MapPin, SlidersHorizontal } from "lucide-react";
 import type { Job } from "@/lib/mockData";
 import JobCard from "@/components/JobCard";
+import { fetchJobs, fetchCategories } from "@/lib/api";
 
 const jobTypes = ["Full Time", "Part Time", "Remote", "Hybrid", "On-site", "Contract"];
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://beleqet-interview-task-production-fd0d.up.railway.app/api/v1";
 
 export default function JobsListing() {
   const searchParams = useSearchParams();
@@ -21,44 +20,26 @@ export default function JobsListing() {
   const [category, setCategory] = useState(searchParams.get("category") ?? "");
   const [type, setType] = useState<string>("");
 
-  // Fetch jobs from API on component mount
+  // Fetch jobs and categories from API on component mount
   useEffect(() => {
-    const fetchJobs = async () => {
+    const loadData = async () => {
       setLoading(true);
       try {
-        const url = new URL(`${API_URL}/jobs`);
-        if (query) url.searchParams.append("q", query);
-        if (category) url.searchParams.append("category", category);
-        if (location) url.searchParams.append("location", location);
-
-        const res = await fetch(url.toString());
-        if (res.ok) {
-          const data = await res.json();
-          setJobs(Array.isArray(data) ? data : data.data || []);
-          // Extract categories from jobs
-          const categoryMap = new Map();
-          const jobsArray = Array.isArray(data) ? data : data.data || [];
-          jobsArray.forEach((job: any) => {
-            if (job.category && !categoryMap.has(job.category)) {
-              categoryMap.set(job.category, {
-                id: job.category,
-                label: job.category,
-                count: '0',
-                icon: 'folder',
-              });
-            }
-          });
-          setCategories(Array.from(categoryMap.values()));
-        }
+        const [jobsResult, categoriesResult] = await Promise.all([
+          fetchJobs({ limit: 100 }),
+          fetchCategories()
+        ]);
+        setJobs(jobsResult.items || []);
+        setCategories(categoriesResult || []);
       } catch (error) {
-        console.error("Failed to fetch jobs:", error);
+        console.error("Failed to fetch data:", error);
         setJobs([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchJobs();
+    loadData();
   }, []);
 
   const filtered = useMemo(() => {

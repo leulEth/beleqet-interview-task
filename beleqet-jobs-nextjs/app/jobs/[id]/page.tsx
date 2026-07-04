@@ -9,7 +9,7 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
   // Fetch all jobs to find related ones
   const jobsData = await fetchJobs();
-  const allJobs = Array.isArray(jobsData) ? jobsData : jobsData.data || [];
+  const allJobs = jobsData.items || [];
   const related = allJobs.filter((j: any) => j.category === job.category && j.id !== job.id).slice(0, 3);
 
   return (
