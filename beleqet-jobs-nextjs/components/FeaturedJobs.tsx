@@ -1,9 +1,13 @@
 import Link from "next/link";
-import { jobs } from "@/lib/mockData";
+import type { Job } from "@/lib/mockData";
 import JobCard from "./JobCard";
 
-export default function FeaturedJobs() {
-  const featured = jobs.filter((j) => j.featured);
+interface FeaturedJobsProps {
+  jobs: Job[];
+}
+
+export default function FeaturedJobs({ jobs }: FeaturedJobsProps) {
+  const featured = jobs.filter((j: any) => j.featured);
 
   return (
     <section className="bg-white border-y border-border">
@@ -19,9 +23,13 @@ export default function FeaturedJobs() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {featured.map((job) => (
-            <JobCard key={job.id} job={job} />
-          ))}
+          {featured.length > 0 ? (
+            featured.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))
+          ) : (
+            <p className="text-muted col-span-full text-center py-8">No featured jobs available</p>
+          )}
         </div>
       </div>
     </section>

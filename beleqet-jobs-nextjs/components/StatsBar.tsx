@@ -1,5 +1,14 @@
 import { Briefcase, Building2, Users, Smile, type LucideIcon } from "lucide-react";
-import { stats } from "@/lib/mockData";
+
+interface Stat {
+  label: string;
+  value: string;
+  icon: string;
+}
+
+interface StatsBarProps {
+  stats: Stat[];
+}
 
 const iconMap: Record<string, LucideIcon> = {
   briefcase: Briefcase,
@@ -8,7 +17,7 @@ const iconMap: Record<string, LucideIcon> = {
   smile: Smile,
 };
 
-export default function StatsBar() {
+export default function StatsBar({ stats }: StatsBarProps) {
   return (
     <div className="container-page -mt-7 relative z-10">
       <div className="rounded-2xl bg-brandGreen text-white grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/15 shadow-cardHover">

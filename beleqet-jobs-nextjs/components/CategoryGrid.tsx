@@ -9,7 +9,17 @@ import {
   MoreHorizontal,
   type LucideIcon,
 } from "lucide-react";
-import { categories } from "@/lib/mockData";
+
+interface Category {
+  id: string;
+  label: string;
+  count: string;
+  icon: string;
+}
+
+interface CategoryGridProps {
+  categories: Category[];
+}
 
 const iconMap: Record<string, LucideIcon> = {
   laptop: Laptop,
@@ -21,7 +31,7 @@ const iconMap: Record<string, LucideIcon> = {
   "more-horizontal": MoreHorizontal,
 };
 
-export default function CategoryGrid() {
+export default function CategoryGrid({ categories }: CategoryGridProps) {
   return (
     <section className="container-page py-14">
       <div className="flex items-end justify-between mb-6">
