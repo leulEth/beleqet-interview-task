@@ -1,29 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MapPin, Clock, Building2, ArrowLeft } from "lucide-react";
-import { jobs as mockJobs } from "@/lib/mockData";
 import { fetchJobById, fetchJobs } from "@/lib/api";
 
-export async function generateStaticParams() {
-  // Keep some mock job params for static generation
-  // In a real app, you might fetch the first N jobs or use ISR
-  return mockJobs.slice(0, 5).map((job) => ({ id: job.id }));
-}
-
 export default async function JobDetailPage({ params }: { params: { id: string } }) {
-  // Fetch the specific job
-  let job = await fetchJobById(params.id);
-
-  // Fallback to mock data if API fails
-  if (!job) {
-    job = mockJobs.find((j) => j.id === params.id);
-  }
-
+  const job = await fetchJobById(params.id);
   if (!job) notFound();
 
   // Fetch all jobs to find related ones
   const allJobs = await fetchJobs();
-  const jobsArray = Array.isArray(allJobs) ? allJobs : allJobs.data || mockJobs;
+  const jobsArray = Array.isArray(allJobs) ? allJobs : allJobs.data || [];
   const related = jobsArray
     .filter((j: any) => j.category === job.category && j.id !== job.id)
     .slice(0, 3);
@@ -65,7 +51,7 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
             {job.tags && (
               <div className="mt-6 flex flex-wrap gap-2">
-                {job.tags.map((tag) => (
+                {job.tags.map((tag: string) => (
                   <span key={tag} className="text-xs font-medium text-muted bg-pageBg border border-border rounded-full px-3 py-1">
                     {tag}
                   </span>
