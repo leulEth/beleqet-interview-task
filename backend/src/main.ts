@@ -20,7 +20,7 @@ async function bootstrap() {
   app.enableCors({
     origin: (origin, callback) => {
       const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
-      const allowed = [frontendUrl, 'http://localhost:3000', 'http://localhost:3001'];
+      const allowed = [frontendUrl, 'http://localhost:3000', 'http://localhost:3001', 'https://alert-gentleness-production-97ad.up.railway.app'];
       if (!origin || allowed.includes(origin) || origin.startsWith('http://localhost:')) {
         callback(null, true);
       } else {
