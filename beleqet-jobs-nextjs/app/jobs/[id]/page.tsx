@@ -49,7 +49,7 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
             {job.tags && (
               <div className="mt-6 flex flex-wrap gap-2">
-                {job.tags.map((tag) => (
+                {job.tags.map((tag: string) => (
                   <span key={tag} className="text-xs font-medium text-muted bg-pageBg border border-border rounded-full px-3 py-1">
                     {tag}
                   </span>
@@ -73,7 +73,7 @@ export default async function JobDetailPage({ params }: { params: { id: string }
             <div className="rounded-2xl border border-border bg-white p-6">
               <h3 className="text-sm font-semibold text-ink mb-4">Similar Jobs</h3>
               <div className="space-y-3">
-                {related.map((r) => (
+                {related.map((r: any) => (
                   <Link
                     key={r.id}
                     href={`/jobs/${r.id}`}
