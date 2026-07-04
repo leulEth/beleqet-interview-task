@@ -18,7 +18,15 @@ async function bootstrap() {
   // ── Security ──────────────────────────────────────────────────────────────
   app.use(helmet());
   app.enableCors({
-    origin: configService.get<string>('FRONTEND_URL', 'http://localhost:3000'),
+    origin: (origin, callback) => {
+      const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+      const allowed = [frontendUrl, 'http://localhost:3000', 'http://localhost:3001'];
+      if (!origin || allowed.includes(origin) || origin.startsWith('http://localhost:')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   });
